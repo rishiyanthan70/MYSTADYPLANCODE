@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Hub — Study Plan</title>
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="studyplan.css">
+</head>
+<body>
+  <div class="wave-shimmer"></div>
+ 
+  <div class="layout">
+    <!-- ========== LEFT SIDEBAR (25%) ========== -->
+    <aside class="panel panel-left">
+      <!-- Create Plan Group Button -->
+      <div class="content-box">
+        <button class="btn btn-yellow btn-full" id="createGroupBtn">+ Create Plan Group</button>
+      </div>
+ 
+      <!-- Plan Groups List -->
+      <div class="content-box groups-list-box">
+        <span class="box-label">Plan Groups</span>
+        <div class="groups-list" id="groupsList">
+          <p class="hint-text">No groups</p>
+        </div>
+      </div>
+ 
+      <!-- Current Time & Calendar -->
+      <div class="content-box">
+        <span class="box-label">Time</span>
+        <div class="time-display" id="timeDisplay">
+          <span id="currentTime">00:00:00</span>
+        </div>
+      </div>
+ 
+      <div class="content-box calendar-box">
+        <span class="box-label">Calendar</span>
+        <div class="calendar-widget" id="calendarWidget"></div>
+      </div>
+    </aside>
+ 
+    <!-- ========== CENTER (75%) - EXTENDED ========== -->
+    <main class="panel panel-center-extended">
+      <!-- Top Buttons -->
+      <div class="content-box button-row-box">
+        <button class="btn btn-yellow btn-full" id="createPlanBtn">+ Create Plan</button>
+      </div>
+ 
+      <!-- Non-Completed Tasks -->
+      <div class="content-box tasks-box non-completed-box">
+        <span class="box-label">Non-Completed</span>
+        <div class="tasks-list" id="nonCompletedTasks">
+          <p class="hint-text">No tasks</p>
+        </div>
+      </div>
+ 
+      <!-- Clear Buttons Row -->
+      <div class="content-box button-row-box">
+        <button class="btn btn-ghost btn-full" id="clearNonCompletedBtn">Clear Non-Completed</button>
+        <button class="btn btn-ghost btn-full" id="clearCompletedBtn">Clear Completed</button>
+      </div>
+ 
+      <!-- Completed Tasks -->
+      <div class="content-box tasks-box completed-box">
+        <span class="box-label">Completed</span>
+        <div class="tasks-list" id="completedTasks">
+          <p class="hint-text">No completed</p>
+        </div>
+      </div>
+ 
+      <!-- Helpers Section -->
+      <div class="content-box helpers-box">
+        <span class="box-label">📚 Helpers</span>
+        <a href="https://thehelpers.tech/semesters" target="_blank" class="helpers-link">
+          Open Helpers Platform →
+        </a>
+      </div>
+    </main>
+  </div>
+ 
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <button class="nav-btn"        onclick="location.href='index.html'">🏠 Home</button>
+    <button class="nav-btn"        onclick="location.href='folder.html'">📁 Folder</button>
+    <button class="nav-btn active" onclick="location.href='studyplan.html'">📋 Study Plan</button>
+  </div>
+ 
+  <!-- CREATE PLAN GROUP MODAL -->
+  <div class="modal" id="createGroupModal">
+    <div class="modal-overlay" id="createGroupOverlay"></div>
+    <div class="modal-box">
+      <div class="modal-title">Create Plan Group</div>
+      <button class="modal-close" id="closeGroupModal">✕</button>
+      <input class="input-field" id="groupName" placeholder="Group name…">
+      <div class="modal-row">
+        <button class="btn btn-ghost btn-full" id="cancelGroupModal">Cancel</button>
+        <button class="btn btn-yellow btn-full" id="confirmGroupModal">Create</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- CREATE PLAN MODAL -->
+  <div class="modal" id="createPlanModal">
+    <div class="modal-overlay" id="createPlanOverlay"></div>
+    <div class="modal-box">
+      <div class="modal-title">Create Plan in Group</div>
+      <button class="modal-close" id="closePlanModal">✕</button>
+      <select class="input-field" id="groupSelect">
+        <option value="">-- Select Group --</option>
+      </select>
+      <input class="input-field" id="planName" placeholder="Plan name…">
+      <input class="input-field" id="planDesc" placeholder="Description (optional)…">
+      <div class="modal-row">
+        <button class="btn btn-ghost btn-full" id="cancelPlanModal">Cancel</button>
+        <button class="btn btn-yellow btn-full" id="confirmPlanModal">Create</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Notification -->
+  <div class="notification" id="notification"><span id="notifText"></span></div>
+ 
+  <script src="studyplan.js"></script>
+</body>
+</html>
+ 
