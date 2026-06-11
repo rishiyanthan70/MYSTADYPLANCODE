@@ -1,322 +1,679 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Hub — Home</title>
-  <link rel="stylesheet" href="shared.css">
-  <link rel="stylesheet" href="index.css">
+  <title>Study Hub — Verification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+ 
+    :root {
+      --primary: #cc3333;
+      --yellow: #ffd700;
+      --green: #00ff41;
+      --dark: #050505;
+      --light-dark: #1a1a1a;
+    }
+ 
+    body {
+      background: url('backgroound.jpg') center/cover fixed;
+      background-color: var(--dark);
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+ 
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5,5,5,0.65);
+      z-index: -1;
+    }
+ 
+    .wave-shimmer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(0,255,65,0.01), rgba(204,51,51,0.01), rgba(255,215,0,0.01));
+      animation: shimmer 8s infinite;
+      z-index: -1;
+      pointer-events: none;
+    }
+ 
+    @keyframes shimmer {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(10px, 10px); }
+    }
+ 
+    .auth-container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(26,26,26,0.97);
+      border: 2px solid var(--primary);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 30px rgba(204,51,51,0.4);
+      backdrop-filter: blur(10px);
+    }
+ 
+    .auth-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+ 
+    .auth-title {
+      font-size: 2.2rem;
+      color: var(--yellow);
+      margin-bottom: 10px;
+      text-shadow: 0 0 15px rgba(255,215,0,0.4);
+      font-weight: bold;
+    }
+ 
+    .auth-subtitle {
+      color: #aaa;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+    }
+ 
+    .tabs-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 35px;
+    }
+ 
+    .tab {
+      background: rgba(204,51,51,0.1);
+      border: 2px solid rgba(204,51,51,0.3);
+      color: #999;
+      padding: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+ 
+    .tab:hover {
+      border-color: rgba(204,51,51,0.6);
+      background: rgba(204,51,51,0.15);
+    }
+ 
+    .tab.active {
+      background: linear-gradient(135deg, rgba(204,51,51,0.3), rgba(204,51,51,0.15));
+      border-color: var(--primary);
+      color: var(--yellow);
+      box-shadow: 0 0 20px rgba(204,51,51,0.3);
+      transform: scale(1.02);
+    }
+ 
+    .form-container {
+      display: none;
+    }
+ 
+    .form-container.active {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: fadeIn 0.4s;
+    }
+ 
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+ 
+    .form-title {
+      color: var(--yellow);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+ 
+    .field {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+ 
+    .field label {
+      color: var(--yellow);
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+ 
+    .field input {
+      background: rgba(0,0,0,0.6);
+      border: 2px solid rgba(204,51,51,0.4);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+ 
+    .field input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(204,51,51,0.4);
+      background: rgba(204,51,51,0.08);
+    }
+ 
+    .field input::placeholder {
+      color: #666;
+    }
+ 
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      top: 32px;
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      padding: 5px;
+    }
+ 
+    .eye-btn:hover {
+      color: var(--yellow);
+      transform: scale(1.25);
+    }
+ 
+    .strength-container {
+      margin-top: -5px;
+    }
+ 
+    .strength-meter {
+      background: rgba(0,0,0,0.5);
+      border: 2px solid rgba(204,51,51,0.3);
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+    }
+ 
+    #strengthFill {
+      height: 100%;
+      transition: all 0.3s;
+      background: transparent;
+    }
+ 
+    #strengthLabel {
+      display: block;
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 5px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+ 
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+ 
+    .button-group button {
+      flex: 1;
+    }
+ 
+    .btn {
+      background: rgba(204,51,51,0.2);
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      padding: 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+ 
+    .btn:hover {
+      background: rgba(204,51,51,0.35);
+      box-shadow: 0 0 18px rgba(204,51,51,0.4);
+      transform: translateY(-2px);
+    }
+ 
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #ff6b6b);
+      color: #fff;
+      border-color: #ff6b6b;
+    }
+ 
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #ff6b6b, var(--primary));
+      box-shadow: 0 0 25px rgba(255,107,107,0.6);
+    }
+ 
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+    }
+ 
+    .btn-secondary:hover {
+      background: rgba(204,51,51,0.15);
+    }
+ 
+    .info-text {
+      font-size: 0.8rem;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.5;
+    }
+ 
+    .info-text a {
+      color: var(--yellow);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+ 
+    .info-text a:hover {
+      text-decoration: underline;
+    }
+ 
+    .logged-in-message {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+ 
+    .logged-in-message.show {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+ 
+    .logged-in-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+ 
+    .logged-in-text {
+      color: var(--yellow);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+ 
+    .logged-in-user {
+      color: var(--green);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+ 
+    @media (max-width: 768px) {
+      .auth-container {
+        max-width: 100%;
+        padding: 30px 20px;
+      }
+ 
+      .auth-title {
+        font-size: 1.8rem;
+      }
+ 
+      .tabs-container {
+        gap: 8px;
+      }
+ 
+      .tab {
+        padding: 12px;
+        font-size: 0.85rem;
+      }
+ 
+      .field input {
+        padding: 10px;
+        font-size: 16px;
+      }
+ 
+      .eye-btn {
+        top: 30px;
+        font-size: 1rem;
+      }
+ 
+      .btn {
+        padding: 11px;
+        font-size: 0.9rem;
+      }
+    }
+ 
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+ 
+      .auth-container {
+        padding: 20px 15px;
+      }
+ 
+      .auth-title {
+        font-size: 1.5rem;
+      }
+ 
+      .auth-subtitle {
+        font-size: 0.85rem;
+      }
+ 
+      .tabs-container {
+        gap: 6px;
+      }
+ 
+      .tab {
+        padding: 10px;
+        font-size: 0.8rem;
+      }
+ 
+      .field label {
+        font-size: 0.75rem;
+      }
+ 
+      .field input {
+        padding: 8px;
+        font-size: 14px;
+      }
+ 
+      .eye-btn {
+        top: 28px;
+        font-size: 0.9rem;
+      }
+ 
+      .btn {
+        padding: 9px;
+        font-size: 0.8rem;
+      }
+ 
+      .info-text {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <script>
-    // Check if user is logged in, if not redirect to verification
-    if (!localStorage.getItem('currentUser')) {
-      window.location.href = 'verification.html';
-    }
-  </script>
- 
   <div class="wave-shimmer"></div>
- 
-  <!-- DESKTOP LAYOUT (hidden on mobile) -->
-  <div class="layout desktop-layout">
-    <!-- ========== LEFT SIDEBAR (30%) ========== -->
-    <aside class="panel panel-left">
-      <!-- Add Subject -->
-      <div class="content-box">
-        <span class="box-label">Add Subject</span>
-        <input class="input-field" id="subjectInput" placeholder="Subject name…">
-        <input class="input-field" id="descInput" placeholder="Description…">
-        <div class="row-2">
-          <button class="btn btn-yellow" id="createSubjectBtn">Create</button>
-          <button class="btn btn-ghost" id="resetBtn">Reset</button>
-        </div>
-      </div>
- 
-      <!-- Create Study Plan -->
-      <div class="content-box">
-        <button class="btn btn-yellow btn-full btn-icon-label" id="goStudyPlanBtn">
-          <span>📚</span> Create Study Plan
-        </button>
-      </div>
- 
-      <!-- Search Results (70% vh) -->
-      <div class="content-box search-results-box">
-        <span class="box-label">Search Results</span>
-        <div class="search-results" id="searchResults">
-          <p class="hint-text">type something to search…</p>
-        </div>
-      </div>
- 
-      <!-- Search Input -->
-      <div class="content-box">
-        <div class="search-row">
-          <input class="input-field" id="searchInput" placeholder="Search…">
-          <button class="btn btn-yellow search-icon-btn" id="searchBtn">🔍</button>
-        </div>
-      </div>
-    </aside>
- 
-    <!-- ========== CENTER (40%) ========== -->
-    <main class="panel panel-center">
-      <!-- Subject Display Box (50% vh) -->
-      <div class="content-box subject-display-box">
-        <span class="box-label">Subjects</span>
-        <div class="subjects-list" id="subjectsList">
-          <p class="hint-text">ex: for added subject can view stay!</p>
-        </div>
-      </div>
- 
-      <!-- Day-Order Display (45% vh) -->
-      <div class="content-box dayorder-display-box">
-        <span class="box-label">Day-Order Schedule</span>
-        <div class="dayorder-tabs" id="dayorderTabs">
-          <button class="day-tab active-tab" data-day="1">Day 1</button>
-          <button class="day-tab" data-day="2">Day 2</button>
-          <button class="day-tab" data-day="3">Day 3</button>
-          <button class="day-tab" data-day="4">Day 4</button>
-          <button class="day-tab" data-day="5">Day 5</button>
-        </div>
-        <div class="dayorder-list" id="dayorderList">
-          <p class="hint-text">No entries for this day.</p>
-        </div>
-      </div>
-    </main>
- 
-    <!-- ========== RIGHT SIDEBAR (30%) ========== -->
-    <aside class="panel panel-right">
-      <!-- Clock -->
-      <div class="content-box clock-box">
-        <div class="clock-rect" id="clockRect">
-          <span class="clock-time" id="clockTime">00:00</span>
-        </div>
-      </div>
- 
-      <!-- Create Day-Order -->
-      <div class="content-box">
-        <span class="box-label">Create Day-Order</span>
-        <select class="input-field" id="daySelect">
-          <option value="1">Day 1</option>
-          <option value="2">Day 2</option>
-          <option value="3">Day 3</option>
-          <option value="4">Day 4</option>
-          <option value="5">Day 5</option>
-        </select>
-        <input class="input-field" id="daySubjectInput" placeholder="Subject…">
-        <div class="time-row">
-          <input type="time" class="input-field" id="startTime">
-          <span class="arrow-sep">→</span>
-          <input type="time" class="input-field" id="endTime">
-        </div>
-        <button class="btn btn-yellow btn-full" id="createDayOrderBtn">Create</button>
-      </div>
- 
-      <!-- Create Folder (staging) -->
-      <div class="content-box">
-        <span class="box-label">Create Folder</span>
-        <input class="input-field" id="folderNameInput" placeholder="Folder name…">
-        <div id="pendingFilesList" class="pending-files"></div>
-        <div class="row-2">
-          <button class="btn btn-ghost" id="addPendingFileBtn">+ Add File</button>
-          <button class="btn btn-yellow" id="createFolderBtn">Create</button>
-        </div>
-      </div>
-    </aside>
-  </div>
- 
-  <!-- MOBILE LAYOUT (hidden on desktop) -->
-  <div class="mobile-layout">
-    <!-- LEFT MENU BUTTON (15% x 15%) -->
-    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
- 
-    <!-- DAY COLUMNS BOX (15% x 40%) -->
-    <div class="mobile-day-box">
-      <button class="mobile-day-btn" onclick="selectMobileDay(1)">1</button>
-      <button class="mobile-day-btn" onclick="selectMobileDay(2)">2</button>
-      <button class="mobile-day-btn" onclick="selectMobileDay(3)">3</button>
-      <button class="mobile-day-btn" onclick="selectMobileDay(4)">4</button>
-      <button class="mobile-day-btn" onclick="selectMobileDay(5)">5</button>
+  
+  <div class="auth-container">
+    <!-- LOGGED IN MESSAGE -->
+    <div class="logged-in-message" id="loggedInMessage">
+      <div class="logged-in-icon">✅</div>
+      <div class="logged-in-text">Already Logged In!</div>
+      <div class="logged-in-user" id="loggedInUser"></div>
+      <button class="btn btn-primary" onclick="goToHome()">Go to Home</button>
+      <button class="btn btn-secondary" onclick="logout()">Logout</button>
     </div>
  
-    <!-- SRM STUDIQUE BUTTON (15% x 25%) -->
-    <a href="https://studique.in/auth/login" target="_blank" class="mobile-studique-btn">
-      📚 SRM<br>Studique
-    </a>
- 
-    <!-- RIGHT CONTENT AREA - DAY ORDER SUBJECTS -->
-    <div class="mobile-content-area">
-      <div id="mobileContentBox" class="mobile-content-box">
-        <p class="hint-text">Select a day</p>
+    <!-- AUTH FORM -->
+    <div id="authForm">
+      <div class="auth-header">
+        <div class="auth-title">🎓 Study Hub</div>
+        <div class="auth-subtitle">Welcome Back</div>
       </div>
+ 
+      <!-- TABS -->
+      <div class="tabs-container">
+        <button class="tab active" id="tabSignIn" onclick="showTab('signin')">🔐 Sign In</button>
+        <button class="tab" id="tabSignUp" onclick="showTab('signup')">✏️ Sign Up</button>
+      </div>
+ 
+      <!-- SIGN IN FORM -->
+      <form class="form-container active" id="signInForm" onsubmit="handleSignIn(event)">
+        <div class="form-title">Sign In to Your Account</div>
+ 
+        <div class="field">
+          <label>Username or Email</label>
+          <input type="text" id="signInUser" placeholder="Enter username or email" required>
+        </div>
+ 
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signInPass" placeholder="Enter your password" required>
+          <button type="button" class="eye-btn" onclick="toggleEye('signInPass')">👁️</button>
+        </div>
+ 
+        <button type="submit" class="btn btn-primary">🔓 Sign In</button>
+ 
+        <div class="info-text">
+          Don't have an account? <a onclick="showTab('signup')">Create one here</a>
+        </div>
+      </form>
+ 
+      <!-- SIGN UP FORM -->
+      <form class="form-container" id="signUpForm" onsubmit="handleSignUp(event)">
+        <div class="form-title">Create New Account</div>
+ 
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="signUpUser" placeholder="Choose a unique username" required>
+        </div>
+ 
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="signUpEmail" placeholder="Enter your email" required>
+        </div>
+ 
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signUpPass" placeholder="Create a strong password" required onInput="checkPasswordStrength()">
+          <button type="button" class="eye-btn" onclick="toggleEye('signUpPass')">👁️</button>
+          
+          <div class="strength-container">
+            <div class="strength-meter">
+              <div id="strengthFill"></div>
+            </div>
+            <span id="strengthLabel"></span>
+          </div>
+        </div>
+ 
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">✅ Create Account</button>
+          <button type="button" class="btn btn-secondary" onclick="showTab('signin')">Cancel</button>
+        </div>
+ 
+        <div class="info-text">
+          Already have an account? <a onclick="showTab('signin')">Sign in here</a>
+        </div>
+      </form>
     </div>
   </div>
  
-  <!-- MOBILE MENU SLIDE (70% x 100%) -->
-  <div class="mobile-menu-slide" id="mobileMenuSlide">
-    <div class="mobile-menu-content">
-      <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
-      
-      <div class="mobile-menu-title">Create Day Order</div>
- 
-      <select class="input-field" id="mobileDaySelect">
-        <option value="1">Day 1</option>
-        <option value="2">Day 2</option>
-        <option value="3">Day 3</option>
-        <option value="4">Day 4</option>
-        <option value="5">Day 5</option>
-      </select>
- 
-      <select class="input-field" id="mobileSubjectSelect">
-        <option value="">-- Select Subject --</option>
-      </select>
- 
-      <input type="time" class="input-field" id="mobileStartTime" placeholder="Start time">
-      <input type="time" class="input-field" id="mobileEndTime" placeholder="End time">
- 
-      <button class="btn btn-yellow btn-full" id="mobileCreateBtn">Create</button>
- 
-      <div class="mobile-menu-bottom">
-        <a href="https://studique.in/auth/login" target="_blank" class="mobile-menu-studique-btn">
-          📚 SRM Studique
-        </a>
-      </div>
-    </div>
-  </div>
- 
-  <!-- Taskbar -->
-  <div class="taskbar">
-    <button class="nav-btn active" onclick="navigateTo('index.html')">🏠 Home</button>
-    <button class="nav-btn" onclick="navigateTo('folder.html')">📁 Folder</button>
-    <button class="nav-btn" onclick="navigateTo('studyplan.html')">📋 Study Plan</button>
-  </div>
- 
-  <!-- ADD FILE MODAL -->
-  <div class="modal" id="addFileModal">
-    <div class="modal-overlay" id="addFileOverlay"></div>
-    <div class="modal-box">
-      <div class="modal-title">Add File to Folder</div>
-      <button class="modal-close" id="closeAddFile">✕</button>
-      <input class="input-field" id="pendingFileName" placeholder="File name…">
-      <label class="upload-zone" id="uploadZone">
-        <span id="uploadLabel">📂 Click to choose file</span>
-        <input type="file" id="fileInputHidden" style="display:none">
-      </label>
-      <div class="modal-row">
-        <button class="btn btn-ghost btn-full" id="cancelAddFile">Cancel</button>
-        <button class="btn btn-yellow btn-full" id="confirmAddFile">Add</button>
-      </div>
-    </div>
-  </div>
- 
-  <!-- Notification -->
-  <div class="notification" id="notification"><span id="notifText"></span></div>
- 
-  <script src="Index.js"></script>
   <script>
-    // Navigation function
-    function navigateTo(page) {
-      window.location.href = page;
+    // ════════════════════════════════════════
+    // CHECK IF ALREADY LOGGED IN
+    // ════════════════════════════════════════
+    window.addEventListener('load', () => {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        showLoggedInMessage(currentUser);
+      }
+    });
+ 
+    function showLoggedInMessage(username) {
+      document.getElementById('authForm').style.display = 'none';
+      document.getElementById('loggedInMessage').classList.add('show');
+      document.getElementById('loggedInUser').textContent = `Logged in as: ${username}`;
     }
  
-    // Mobile day selection
-    let mobileSelectedDay = 1;
-    function selectMobileDay(day) {
-      mobileSelectedDay = day;
-      document.querySelectorAll('.mobile-day-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.mobile-day-btn')[day - 1].classList.add('active');
-      renderMobileDayContent();
+    function goToHome() {
+      window.location.href = 'index.html';
     }
  
-    function renderMobileDayContent() {
-      if (typeof homeApp === 'undefined' || !homeApp) return;
-      const dayOrders = homeApp.dayOrders.filter(d => d.day === String(mobileSelectedDay));
-      const container = document.getElementById('mobileContentBox');
-      if (!container) return;
+    function logout() {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('isAdmin');
+      document.getElementById('loggedInMessage').classList.remove('show');
+      document.getElementById('authForm').style.display = 'block';
+      showTab('signin');
+      alert('✅ Logged out successfully!');
+    }
+ 
+    // ════════════════════════════════════════
+    // TAB SWITCHING
+    // ════════════════════════════════════════
+    function showTab(tab) {
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabSignUp = document.getElementById('tabSignUp');
+ 
+      if (tab === 'signin') {
+        signInForm.classList.add('active');
+        signUpForm.classList.remove('active');
+        tabSignIn.classList.add('active');
+        tabSignUp.classList.remove('active');
+      } else {
+        signInForm.classList.remove('active');
+        signUpForm.classList.add('active');
+        tabSignIn.classList.remove('active');
+        tabSignUp.classList.add('active');
+      }
+    }
+ 
+    // ════════════════════════════════════════
+    // PASSWORD STRENGTH METER
+    // ════════════════════════════════════════
+    function checkPasswordStrength() {
+      const pass = document.getElementById('signUpPass').value;
+      const fill = document.getElementById('strengthFill');
+      const label = document.getElementById('strengthLabel');
       
-      if (dayOrders.length === 0) {
-        container.innerHTML = '<p class="hint-text">No subjects for Day ' + mobileSelectedDay + '</p>';
+      let score = 0;
+      if (pass.length >= 8) score++;
+      if (/[A-Z]/.test(pass)) score++;
+      if (/[0-9]/.test(pass)) score++;
+      if (/[^A-Za-z0-9]/.test(pass)) score++;
+ 
+      const levels = [
+        { width: '0%', bg: 'transparent', text: '', color: '#999' },
+        { width: '25%', bg: '#cc3333', text: '⚠️ Weak', color: '#cc3333' },
+        { width: '50%', bg: '#ff9800', text: '⚡ Fair', color: '#ff9800' },
+        { width: '75%', bg: '#ffd700', text: '✓ Good', color: '#ffd700' },
+        { width: '100%', bg: '#00ff41', text: '✅ Strong', color: '#00ff41' },
+      ];
+ 
+      const level = levels[Math.min(score, 4)];
+      fill.style.width = level.width;
+      fill.style.background = level.bg;
+      label.textContent = level.text;
+      label.style.color = level.color;
+    }
+ 
+    // ════════════════════════════════════════
+    // PASSWORD VISIBILITY TOGGLE
+    // ════════════════════════════════════════
+    function toggleEye(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+ 
+    // ════════════════════════════════════════
+    // SIGN IN HANDLER
+    // ════════════════════════════════════════
+    function handleSignIn(event) {
+      event.preventDefault();
+ 
+      const username = document.getElementById('signInUser').value.trim();
+      const password = document.getElementById('signInPass').value.trim();
+ 
+      if (!username || !password) {
+        alert('❌ Please fill all fields');
         return;
       }
  
-      container.innerHTML = dayOrders.map(d => `
-        <div class="mobile-dayorder-item">
-          <div class="mobile-dayorder-subject">📚 ${homeApp.escapeHtml(d.subject)}</div>
-          <div class="mobile-dayorder-time">⏰ ${d.start} → ${d.end}</div>
-        </div>
-      `).join('');
-    }
+      // Admin login
+      if (username === 'rishiyanthan' && password === 'rishi234') {
+        localStorage.setItem('currentUser', 'rishiyanthan');
+        localStorage.setItem('isAdmin', 'true');
+        alert('✅ Admin login successful!');
+        setTimeout(() => window.location.href = 'index.html', 500);
+        return;
+      }
  
-    // Mobile menu setup
-    function setupMobileMenuListeners() {
-      const menuBtn = document.getElementById('mobileMenuBtn');
-      const menuSlide = document.getElementById('mobileMenuSlide');
-      const closeBtn = document.getElementById('mobileMenuClose');
+      // Regular user login
+      const users = JSON.parse(localStorage.getItem('studyUsers') || '[]');
+      const user = users.find(u => 
+        (u.username === username || u.email === username) && u.password === password
+      );
  
-      if (!menuBtn || !menuSlide) return;
- 
-      menuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuSlide.classList.add('open');
-        updateMobileSubjectSelect();
-      });
- 
-      closeBtn.addEventListener('click', () => {
-        menuSlide.classList.remove('open');
-      });
- 
-      document.addEventListener('click', (e) => {
-        if (menuSlide && !menuSlide.contains(e.target) && e.target !== menuBtn) {
-          menuSlide.classList.remove('open');
-        }
-      });
- 
-      const createBtn = document.getElementById('mobileCreateBtn');
-      if (createBtn) {
-        createBtn.addEventListener('click', () => {
-          if (typeof homeApp === 'undefined') return;
-          const day = document.getElementById('mobileDaySelect').value;
-          const subject = document.getElementById('mobileSubjectSelect').value;
-          const start = document.getElementById('mobileStartTime').value;
-          const end = document.getElementById('mobileEndTime').value;
- 
-          if (!subject || !start || !end) {
-            homeApp.notify('Fill all fields!');
-            return;
-          }
- 
-          homeApp.dayOrders.push({ id: Date.now(), day, subject, start, end });
-          homeApp.saveData();
-          mobileSelectedDay = parseInt(day);
-          selectMobileDay(mobileSelectedDay);
-          menuSlide.classList.remove('open');
-          homeApp.notify('✅ Day order created!');
-        });
+      if (user) {
+        localStorage.setItem('currentUser', user.username);
+        localStorage.setItem('isAdmin', 'false');
+        alert(`✅ Welcome back, ${user.username}!`);
+        setTimeout(() => window.location.href = 'index.html', 500);
+      } else {
+        alert('❌ Invalid credentials. Please try again or sign up.');
       }
     }
  
-    function updateMobileSubjectSelect() {
-      const select = document.getElementById('mobileSubjectSelect');
-      if (!select) return;
-      select.innerHTML = '<option value="">-- Select Subject --</option>';
-      if (typeof homeApp !== 'undefined' && homeApp && homeApp.subjects) {
-        homeApp.subjects.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s.name;
-          opt.textContent = s.name;
-          select.appendChild(opt);
-        });
+    // ════════════════════════════════════════
+    // SIGN UP HANDLER
+    // ════════════════════════════════════════
+    function handleSignUp(event) {
+      event.preventDefault();
+ 
+      const username = document.getElementById('signUpUser').value.trim();
+      const email = document.getElementById('signUpEmail').value.trim();
+      const password = document.getElementById('signUpPass').value.trim();
+ 
+      if (!username || !email || !password) {
+        alert('❌ Please fill all fields');
+        return;
       }
+ 
+      if (password.length < 8) {
+        alert('❌ Password must be at least 8 characters');
+        return;
+      }
+ 
+      if (!email.includes('@')) {
+        alert('❌ Invalid email address');
+        return;
+      }
+ 
+      // Check if username/email already exists
+      const users = JSON.parse(localStorage.getItem('studyUsers') || '[]');
+      if (users.some(u => u.username === username || u.email === email)) {
+        alert('❌ Username or email already exists!');
+        return;
+      }
+ 
+      // Save new user
+      users.push({ username, email, password, date: new Date().toLocaleDateString() });
+      localStorage.setItem('studyUsers', JSON.stringify(users));
+      localStorage.setItem('currentUser', username);
+      localStorage.setItem('isAdmin', 'false');
+ 
+      alert(`✅ Account created! Welcome, ${username}!`);
+      setTimeout(() => window.location.href = 'index.html', 500);
     }
  
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      selectMobileDay(1);
-      setupMobileMenuListeners();
-    });
- 
-    setTimeout(() => {
-      setupMobileMenuListeners();
-      renderMobileDayContent();
-    }, 500);
   </script>
 </body>
 </html>
