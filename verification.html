@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Hub — Verification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+ 
+    :root {
+      --primary: #cc3333;
+      --yellow: #ffd700;
+      --green: #00ff41;
+      --dark: #050505;
+      --light-dark: #1a1a1a;
+    }
+ 
+    body {
+      background: url('backgroound.jpg') center/cover fixed;
+      background-color: var(--dark);
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+ 
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5,5,5,0.65);
+      z-index: -1;
+    }
+ 
+    .wave-shimmer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(0,255,65,0.01), rgba(204,51,51,0.01), rgba(255,215,0,0.01));
+      animation: shimmer 8s infinite;
+      z-index: -1;
+      pointer-events: none;
+    }
+ 
+    @keyframes shimmer {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(10px, 10px); }
+    }
+ 
+    .auth-container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(26,26,26,0.97);
+      border: 2px solid var(--primary);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 30px rgba(204,51,51,0.4);
+      backdrop-filter: blur(10px);
+    }
+ 
+    .auth-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+ 
+    .auth-title {
+      font-size: 2.2rem;
+      color: var(--yellow);
+      margin-bottom: 10px;
+      text-shadow: 0 0 15px rgba(255,215,0,0.4);
+      font-weight: bold;
+    }
+ 
+    .auth-subtitle {
+      color: #aaa;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+    }
+ 
+    .tabs-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 35px;
+    }
+ 
+    .tab {
+      background: rgba(204,51,51,0.1);
+      border: 2px solid rgba(204,51,51,0.3);
+      color: #999;
+      padding: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+ 
+    .tab:hover {
+      border-color: rgba(204,51,51,0.6);
+      background: rgba(204,51,51,0.15);
+    }
+ 
+    .tab.active {
+      background: linear-gradient(135deg, rgba(204,51,51,0.3), rgba(204,51,51,0.15));
+      border-color: var(--primary);
+      color: var(--yellow);
+      box-shadow: 0 0 20px rgba(204,51,51,0.3);
+      transform: scale(1.02);
+    }
+ 
+    .form-container {
+      display: none;
+    }
+ 
+    .form-container.active {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: fadeIn 0.4s;
+    }
+ 
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+ 
+    .form-title {
+      color: var(--yellow);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+ 
+    .field {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+ 
+    .field label {
+      color: var(--yellow);
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+ 
+    .field input {
+      background: rgba(0,0,0,0.6);
+      border: 2px solid rgba(204,51,51,0.4);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+ 
+    .field input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(204,51,51,0.4);
+      background: rgba(204,51,51,0.08);
+    }
+ 
+    .field input::placeholder {
+      color: #666;
+    }
+ 
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      top: 32px;
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      padding: 5px;
+    }
+ 
+    .eye-btn:hover {
+      color: var(--yellow);
+      transform: scale(1.25);
+    }
+ 
+    .strength-container {
+      margin-top: -5px;
+    }
+ 
+    .strength-meter {
+      background: rgba(0,0,0,0.5);
+      border: 2px solid rgba(204,51,51,0.3);
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+    }
+ 
+    #strengthFill {
+      height: 100%;
+      transition: all 0.3s;
+      background: transparent;
+    }
+ 
+    #strengthLabel {
+      display: block;
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 5px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+ 
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+ 
+    .button-group button {
+      flex: 1;
+    }
+ 
+    .btn {
+      background: rgba(204,51,51,0.2);
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      padding: 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+ 
+    .btn:hover {
+      background: rgba(204,51,51,0.35);
+      box-shadow: 0 0 18px rgba(204,51,51,0.4);
+      transform: translateY(-2px);
+    }
+ 
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #ff6b6b);
+      color: #fff;
+      border-color: #ff6b6b;
+    }
+ 
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #ff6b6b, var(--primary));
+      box-shadow: 0 0 25px rgba(255,107,107,0.6);
+    }
+ 
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+    }
+ 
+    .btn-secondary:hover {
+      background: rgba(204,51,51,0.15);
+    }
+ 
+    .info-text {
+      font-size: 0.8rem;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.5;
+    }
+ 
+    .info-text a {
+      color: var(--yellow);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+ 
+    .info-text a:hover {
+      text-decoration: underline;
+    }
+ 
+    .logged-in-message {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+ 
+    .logged-in-message.show {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+ 
+    .logged-in-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+ 
+    .logged-in-text {
+      color: var(--yellow);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+ 
+    .logged-in-user {
+      color: var(--green);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+ 
+    @media (max-width: 768px) {
+      .auth-container {
+        max-width: 100%;
+        padding: 30px 20px;
+      }
+ 
+      .auth-title {
+        font-size: 1.8rem;
+      }
+ 
+      .tabs-container {
+        gap: 8px;
+      }
+ 
+      .tab {
+        padding: 12px;
+        font-size: 0.85rem;
+      }
+ 
+      .field input {
+        padding: 10px;
+        font-size: 16px;
+      }
+ 
+      .eye-btn {
+        top: 30px;
+        font-size: 1rem;
+      }
+ 
+      .btn {
+        padding: 11px;
+        font-size: 0.9rem;
+      }
+    }
+ 
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+ 
+      .auth-container {
+        padding: 20px 15px;
+      }
+ 
+      .auth-title {
+        font-size: 1.5rem;
+      }
+ 
+      .auth-subtitle {
+        font-size: 0.85rem;
+      }
+ 
+      .tabs-container {
+        gap: 6px;
+      }
+ 
+      .tab {
+        padding: 10px;
+        font-size: 0.8rem;
+      }
+ 
+      .field label {
+        font-size: 0.75rem;
+      }
+ 
+      .field input {
+        padding: 8px;
+        font-size: 14px;
+      }
+ 
+      .eye-btn {
+        top: 28px;
+        font-size: 0.9rem;
+      }
+ 
+      .btn {
+        padding: 9px;
+        font-size: 0.8rem;
+      }
+ 
+      .info-text {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wave-shimmer"></div>
+  
+  <div class="auth-container">
+    <!-- LOGGED IN MESSAGE -->
+    <div class="logged-in-message" id="loggedInMessage">
+      <div class="logged-in-icon">✅</div>
+      <div class="logged-in-text">Already Logged In!</div>
+      <div class="logged-in-user" id="loggedInUser"></div>
+      <button class="btn btn-primary" onclick="goToHome()">Go to Home</button>
+      <button class="btn btn-secondary" onclick="logout()">Logout</button>
+    </div>
+ 
+    <!-- AUTH FORM -->
+    <div id="authForm">
+      <div class="auth-header">
+        <div class="auth-title">🎓 Study Hub</div>
+        <div class="auth-subtitle">Welcome Back</div>
+      </div>
+ 
+      <!-- TABS -->
+      <div class="tabs-container">
+        <button class="tab active" id="tabSignIn" onclick="showTab('signin')">🔐 Sign In</button>
+        <button class="tab" id="tabSignUp" onclick="showTab('signup')">✏️ Sign Up</button>
+      </div>
+ 
+      <!-- SIGN IN FORM -->
+      <form class="form-container active" id="signInForm" onsubmit="handleSignIn(event)">
+        <div class="form-title">Sign In to Your Account</div>
+ 
+        <div class="field">
+          <label>Username or Email</label>
+          <input type="text" id="signInUser" placeholder="Enter username or email" required>
+        </div>
+ 
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signInPass" placeholder="Enter your password" required>
+          <button type="button" class="eye-btn" onclick="toggleEye('signInPass')">👁️</button>
+        </div>
+ 
+        <button type="submit" class="btn btn-primary">🔓 Sign In</button>
+ 
+        <div class="info-text">
+          Don't have an account? <a onclick="showTab('signup')">Create one here</a>
+        </div>
+      </form>
+ 
+      <!-- SIGN UP FORM -->
+      <form class="form-container" id="signUpForm" onsubmit="handleSignUp(event)">
+        <div class="form-title">Create New Account</div>
+ 
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="signUpUser" placeholder="Choose a unique username" required>
+        </div>
+ 
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="signUpEmail" placeholder="Enter your email" required>
+        </div>
+ 
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signUpPass" placeholder="Create a strong password" required onInput="checkPasswordStrength()">
+          <button type="button" class="eye-btn" onclick="toggleEye('signUpPass')">👁️</button>
+          
+          <div class="strength-container">
+            <div class="strength-meter">
+              <div id="strengthFill"></div>
+            </div>
+            <span id="strengthLabel"></span>
+          </div>
+        </div>
+ 
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">✅ Create Account</button>
+          <button type="button" class="btn btn-secondary" onclick="showTab('signin')">Cancel</button>
+        </div>
+ 
+        <div class="info-text">
+          Already have an account? <a onclick="showTab('signin')">Sign in here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+ 
+  <script>
+    // ════════════════════════════════════════
+    // CHECK IF ALREADY LOGGED IN
+    // ════════════════════════════════════════
+    window.addEventListener('load', () => {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        showLoggedInMessage(currentUser);
+      }
+    });
+ 
+    function showLoggedInMessage(username) {
+      document.getElementById('authForm').style.display = 'none';
+      document.getElementById('loggedInMessage').classList.add('show');
+      document.getElementById('loggedInUser').textContent = `Logged in as: ${username}`;
+    }
+ 
+    function goToHome() {
+      window.location.href = 'index.html';
+    }
+ 
+    function logout() {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('isAdmin');
+      document.getElementById('loggedInMessage').classList.remove('show');
+      document.getElementById('authForm').style.display = 'block';
+      showTab('signin');
+      alert('✅ Logged out successfully!');
+    }
+ 
+    // ════════════════════════════════════════
+    // TAB SWITCHING
+    // ════════════════════════════════════════
+    function showTab(tab) {
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabSignUp = document.getElementById('tabSignUp');
+ 
+      if (tab === 'signin') {
+        signInForm.classList.add('active');
+        signUpForm.classList.remove('active');
+        tabSignIn.classList.add('active');
+        tabSignUp.classList.remove('active');
+      } else {
+        signInForm.classList.remove('active');
+        signUpForm.classList.add('active');
+        tabSignIn.classList.remove('active');
+        tabSignUp.classList.add('active');
+      }
+    }
+ 
+    // ════════════════════════════════════════
+    // PASSWORD STRENGTH METER
+    // ════════════════════════════════════════
+    function checkPasswordStrength() {
+      const pass = document.getElementById('signUpPass').value;
+      const fill = document.getElementById('strengthFill');
+      const label = document.getElementById('strengthLabel');
+      
+      let score = 0;
+      if (pass.length >= 8) score++;
+      if (/[A-Z]/.test(pass)) score++;
+      if (/[0-9]/.test(pass)) score++;
+      if (/[^A-Za-z0-9]/.test(pass)) score++;
+ 
+      const levels = [
+        { width: '0%', bg: 'transparent', text: '', color: '#999' },
+        { width: '25%', bg: '#cc3333', text: '⚠️ Weak', color: '#cc3333' },
+        { width: '50%', bg: '#ff9800', text: '⚡ Fair', color: '#ff9800' },
+        { width: '75%', bg: '#ffd700', text: '✓ Good', color: '#ffd700' },
+        { width: '100%', bg: '#00ff41', text: '✅ Strong', color: '#00ff41' },
+      ];
+ 
+      const level = levels[Math.min(score, 4)];
+      fill.style.width = level.width;
+      fill.style.background = level.bg;
+      label.textContent = level.text;
+      label.style.color = level.color;
+    }
+ 
+    // ════════════════════════════════════════
+    // PASSWORD VISIBILITY TOGGLE
+    // ════════════════════════════════════════
+    function toggleEye(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+ 
+    // ════════════════════════════════════════
+    // SIGN IN HANDLER
+    // ════════════════════════════════════════
+    function handleSignIn(event) {
+      event.preventDefault();
+ 
+      const username = document.getElementById('signInUser').value.trim();
+      const password = document.getElementById('signInPass').value.trim();
+ 
+      if (!username || !password) {
+        alert('❌ Please fill all fields');
+        return;
+      }
+ 
+      // Admin login
+      if (username === 'rishiyanthan' && password === 'rishi234') {
+        localStorage.setItem('currentUser', 'rishiyanthan');
+        localStorage.setItem('isAdmin', 'true');
+        alert('✅ Admin login successful!');
+        setTimeout(() => window.location.href = 'index.html', 500);
+        return;
+      }
+ 
+      // Regular user login
+      const users = JSON.parse(localStorage.getItem('studyUsers') || '[]');
+      const user = users.find(u => 
+        (u.username === username || u.email === username) && u.password === password
+      );
+ 
+      if (user) {
+        localStorage.setItem('currentUser', user.username);
+        localStorage.setItem('isAdmin', 'false');
+        alert(`✅ Welcome back, ${user.username}!`);
+        setTimeout(() => window.location.href = 'index.html', 500);
+      } else {
+        alert('❌ Invalid credentials. Please try again or sign up.');
+      }
+    }
+ 
+    // ════════════════════════════════════════
+    // SIGN UP HANDLER
+    // ════════════════════════════════════════
+    function handleSignUp(event) {
+      event.preventDefault();
+ 
+      const username = document.getElementById('signUpUser').value.trim();
+      const email = document.getElementById('signUpEmail').value.trim();
+      const password = document.getElementById('signUpPass').value.trim();
+ 
+      if (!username || !email || !password) {
+        alert('❌ Please fill all fields');
+        return;
+      }
+ 
+      if (password.length < 8) {
+        alert('❌ Password must be at least 8 characters');
+        return;
+      }
+ 
+      if (!email.includes('@')) {
+        alert('❌ Invalid email address');
+        return;
+      }
+ 
+      // Check if username/email already exists
+      const users = JSON.parse(localStorage.getItem('studyUsers') || '[]');
+      if (users.some(u => u.username === username || u.email === email)) {
+        alert('❌ Username or email already exists!');
+        return;
+      }
+ 
+      // Save new user
+      users.push({ username, email, password, date: new Date().toLocaleDateString() });
+      localStorage.setItem('studyUsers', JSON.stringify(users));
+      localStorage.setItem('currentUser', username);
+      localStorage.setItem('isAdmin', 'false');
+ 
+      alert(`✅ Account created! Welcome, ${username}!`);
+      setTimeout(() => window.location.href = 'index.html', 500);
+    }
+ 
+  </script>
+</body>
+</html>
+ 
