@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Hub — Attendance Log</title>
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="attendance.css">
+</head>
+<body>
+  <script>
+    if (!localStorage.getItem('currentUser')) window.location.href = 'verification.html';
+  </script>
+  <div class="wave-shimmer"></div>
+
+  <main class="attendance-page">
+    <section class="attendance-header content-box">
+      <div>
+        <div class="box-label">Attendance Log</div>
+        <h1>📊 Class Attendance</h1>
+        <p id="attendanceUser" class="attendance-user"></p>
+      </div>
+      <button class="btn btn-yellow" id="resetAttendanceBtn">Reset to Given Values</button>
+    </section>
+
+    <section class="attendance-summary content-box">
+      <div class="summary-card"><span>Total Present</span><strong id="summaryPresent">0</strong></div>
+      <div class="summary-card"><span>Total AB</span><strong id="summaryAbsent">0</strong></div>
+      <div class="summary-card"><span>Total Classes</span><strong id="summaryTotal">0</strong></div>
+      <div class="summary-card"><span>Overall %</span><strong id="summaryPercentage">0%</strong></div>
+    </section>
+
+    <section class="attendance-table-box content-box">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Present</th>
+              <th>AB</th>
+              <th>Total Class</th>
+              <th>Attendance %</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="taskbar">
+    <button class="nav-btn" onclick="navigateTo('index.html')">🏠 Home</button>
+    <button class="nav-btn active" onclick="navigateTo('attendance.html')">📊 Attendance Log</button>
+    <button class="nav-btn" onclick="navigateTo('folder.html')">📁 Folder</button>
+    <button class="nav-btn" onclick="navigateTo('studyplan.html')">📋 Study Plan</button>
+  </div>
+
+  <div class="notification" id="notification"><span id="notifText"></span></div>
+  <script src="attendance.js"></script>
+  <script>
+    function navigateTo(page) { window.location.href = page; }
+  </script>
+</body>
+</html>

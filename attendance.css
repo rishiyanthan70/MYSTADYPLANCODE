@@ -1,0 +1,34 @@
+/* Attendance Log */
+.attendance-page { width:100%; height:calc(100vh - 72px); padding:12px; display:flex; flex-direction:column; gap:10px; overflow:auto; }
+.attendance-header { flex-direction:row; align-items:center; justify-content:space-between; }
+.attendance-header h1 { color:#ffd700; font-family:var(--font-title); font-size:1.35rem; margin:4px 0; }
+.attendance-user { color:#00ff41; font-size:.78rem; }
+.attendance-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.summary-card { background:rgba(0,0,0,.5); border:2px solid rgba(0,255,65,.35); border-radius:14px; padding:14px; text-align:center; }
+.summary-card span { display:block; color:#aaa; font-size:.72rem; margin-bottom:6px; }
+.summary-card strong { color:#ffd700; font-family:var(--font-title); font-size:1.2rem; }
+.attendance-table-box { flex:1; min-height:260px; overflow:hidden; }
+.table-wrap { width:100%; height:100%; overflow:auto; }
+table { width:100%; border-collapse:separate; border-spacing:0 7px; min-width:650px; }
+th { color:#00ff41; font-family:var(--font-title); font-size:.72rem; text-transform:uppercase; padding:9px; text-align:left; }
+tr.percentage-good td { background:rgba(0,255,65,.055); border-color:rgba(0,255,65,.35); }
+tr.percentage-low td { background:rgba(255,60,60,.075); border-color:rgba(255,60,60,.45); }
+td { border-top:2px solid rgba(204,51,51,.5); border-bottom:2px solid rgba(204,51,51,.5); padding:11px 9px; color:#eee; font-size:.8rem; }
+tr.percentage-good td:first-child { border-left-color:rgba(0,255,65,.35); }
+tr.percentage-low td:first-child { border-left-color:rgba(255,60,60,.45); }
+td:first-child { border-left:2px solid rgba(204,51,51,.5); border-radius:12px 0 0 12px; color:#ffd700; font-weight:bold; }
+tr.percentage-good td:last-child { border-right-color:rgba(0,255,65,.35); }
+tr.percentage-low td:last-child { border-right-color:rgba(255,60,60,.45); }
+td:last-child { border-right:2px solid rgba(204,51,51,.5); border-radius:0 12px 12px 0; color:#00ff41; font-weight:bold; }
+.percentage-good { color:#00ff41 !important; }
+.percentage-low { color:#ff6b6b !important; }
+
+@media (max-width:767px) {
+  .attendance-page { height:calc(100vh - 80px); padding:8px; }
+  .attendance-header { flex-direction:column; align-items:stretch; gap:10px; }
+  .attendance-header h1 { font-size:1rem; }
+  .attendance-summary { grid-template-columns:repeat(2,1fr); }
+  .summary-card { padding:10px 6px; }
+  .summary-card strong { font-size:1rem; }
+  table { min-width:620px; }
+}
